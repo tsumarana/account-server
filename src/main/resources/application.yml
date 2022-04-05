@@ -1,0 +1,16 @@
+server:
+  port: 8070
+  jpa:
+    show-sql: true
+logging.level.com.zjnu.mapper: debug
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mybatis?useUnicode=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password: liguanghuijia1
+
+mybatis:
+  mapper-locations:
+    classpath: mapper/*Mapper.xml
+    type-aliases-package: com.zjnu.mapper

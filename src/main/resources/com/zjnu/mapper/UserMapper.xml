@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zjnu.mapper.UserMapper">
+
+    <resultMap id="userResultMap" type="com.zjnu.pojo.User">
+        <result property="username" column="user_name"></result>
+        <result property="idCard" column="id_card"></result>
+    </resultMap>
+    <resultMap id="countResultMap"  type="java.lang.Integer" >
+
+    </resultMap>
+
+    <select id="selectAll" resultMap="userResultMap">
+        select * from tb_user;
+    </select>
+
+    <select id="selectUser" resultMap="userResultMap" >
+        select * from tb_user where user_name = #{username} and password = #{password} and status = 'true';
+    </select>
+
+    <select id="selectByUsername" resultMap="userResultMap">
+        select id,img,user_name,phone,email,id_card,name from tb_user where user_name= #{username} and status = 'true';
+    </select>
+
+    <select id="selectUserByUserInfo" resultMap="userResultMap">
+        select * from tb_user where user_name = #{username} or id_card = #{idCard} or phone = #{phone};
+    </select>
+
+    <update id="alterUserInfo" >
+        update tb_user set email = #{email},phone = #{phone},id_card = #{idCard},name = #{name} where id = #{id};
+    </update>
+
+    <select id="selectUserByPage" resultMap="userResultMap">
+        select * from tb_user
+        <where>
+            <if test="user.username !=null and user.username !=''">
+                and user_name like #{user.username}
+            </if>
+            <if test="user.email !=null and user.email !=''">
+                and email like #{user.email}
+            </if>
+            <if test="user.idCard !=null and user.idCard !=''">
+                and id_card like #{user.idCard}
+            </if>
+            <if test="user.name !=null and user.name !=''">
+                and name like #{user.name}
+            </if>
+        </where>
+        limit #{begin},#{size}
+    </select>
+    <select id="selectTotalCount"  resultType="java.lang.Integer">
+        select count(*) from tb_user
+        <where>
+            <if test="username !=null and username !=''">
+                and user_name like #{username}
+            </if>
+            <if test="email !=null and email !=''">
+                and email like #{email}
+            </if>
+            <if test="idCard !=null and idCard !=''">
+                and id_card like #{idCard}
+            </if>
+            <if test="name !=null and name !=''">
+                and name like #{name}
+            </if>
+        </where>
+    </select>
+    <insert id="insertUser" >
+        insert into tb_user (user_name,password,email,phone,id_card,name,vip,status) values (#{username},#{password},#{email},#{phone},#{idCard},#{name},'0','true');
+    </insert>
+
+    <update id="addToken">
+        update tb_user set token = #{token} where user_name = #{username};
+    </update>
+
+</mapper>

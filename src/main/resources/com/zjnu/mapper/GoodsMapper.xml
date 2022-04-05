@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zjnu.mapper.GoodsMapper">
+    <resultMap id="goodsResultMap" type="com.zjnu.pojo.Goods">
+        <result property="accountGrade" column="account_grade"></result>
+    </resultMap>
+
+    <select id="selectByPageAndCondition" resultMap="goodsResultMap">
+        select * from tb_goods
+        <where>
+            <if test="goods.title !=null and goods.title !=''">
+                and title like #{goods.title}
+            </if>
+            <if test="goods.type !=null and goods.type !=''">
+                and type like #{goods.type}
+            </if>
+            <if test="goods.seller !=null and goods.seller !=''">
+                and seller like #{goods.seller}
+            </if>
+            <if test="goods.price > 0 ">
+                and  price      &lt;    #{goods.price}
+            </if>
+            <if test="goods.rank !=null and goods.rank !=''">
+                and rank like #{goods.rank}
+            </if>
+            <if test="1==1">
+                and status = 'true'
+            </if>
+        </where>
+        limit #{begin},#{size}
+    </select>
+
+    <select id="selectTotalCountByCondition" resultType="java.lang.Integer">
+        select count(*) from tb_goods
+        <where>
+            <if test="title !=null and title !=''">
+                and title like #{title}
+            </if>
+            <if test="type !=null and type !=''">
+                and type like #{type}
+            </if>
+            <if test="price > 0 ">
+                and  price      &lt;    #{price}
+            </if>
+            <if test="seller !=null and seller !=''">
+                and seller like #{seller}
+            </if>
+            <if test="rank !=null and rank !=''">
+                and rank like #{rank}
+            </if>
+            <if test="1==1">
+                and status = 'true'
+            </if>
+        </where>
+    </select>
+</mapper>
