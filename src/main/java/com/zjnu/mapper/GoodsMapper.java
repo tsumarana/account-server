@@ -19,7 +19,7 @@ public interface GoodsMapper {
     List<Goods> selectAll();
     //新增
     @ResultMap("goodsResultMap")
-    @Insert("insert into tb_goods values(null,#{title},#{price},#{grade},#{type},#{accountGrade},#{decorate},#{rank},#{adult},#{seller},'true')")
+    @Insert("insert into tb_goods values(null,#{title},#{price},#{grade},#{type},#{accountGrade},#{decorate},#{rank},#{adult},#{seller},'true',#{re_id})")
     void addGoods(Goods goods);
     //通过id删除
     @Delete("delete from tb_goods where id = #{id}")
@@ -28,6 +28,10 @@ public interface GoodsMapper {
     @ResultMap("goodsResultMap")
     @Select("select * from tb_goods where id = #{id} and status = 'true'")
     Goods selectById(int id);
+    //通过reId查找
+    @ResultMap("goodsResultMap")
+    @Select("select * from tb_goods where re_id = #{re_id} ")
+    Goods selectByReId(Goods goods);
     //分页查询
     @ResultMap("goodsResultMap")
     @Select("select * from tb_goods limit #{begin}, #{size}")

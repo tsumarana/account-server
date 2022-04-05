@@ -34,6 +34,13 @@ public class OrderServlet {
         Order order = JSON.parseObject(s, Order.class);
         System.out.println(order);
         List<Order> orders = orderService.selectSellerOrder(order);
+        for(Order order1:orders){
+            if(order1.getStatus().equals("true")){
+                order1.setStatus("正常");
+            }else{
+                order1.setStatus("冻结");
+            }
+        }
         resp.setContentType("text/json;charset=utf-8");
         String jsonString = JSON.toJSONString(orders);
         resp.getWriter().write(jsonString);
@@ -45,6 +52,17 @@ public class OrderServlet {
         Goods goods = JSON.parseObject(s, Goods.class);
         System.out.println(goods);
         int id = goods.getId();
+        orderService.deleteOrderById(id);
+        goodsService.deleteGoodsById(id);
+        trolleyService.deleteTrolleyById(id);
+    }
+    @RequestMapping("/delete")
+    public void delete(HttpServletRequest req,HttpServletResponse resp)throws IOException{
+        req.setCharacterEncoding("utf-8");
+        String s = req.getReader().readLine();
+        Order order = JSON.parseObject(s, Order.class);
+        System.out.println(order);
+        int id = Integer.parseInt(order.getBrandId());
         orderService.deleteOrderById(id);
         goodsService.deleteGoodsById(id);
         trolleyService.deleteTrolleyById(id);

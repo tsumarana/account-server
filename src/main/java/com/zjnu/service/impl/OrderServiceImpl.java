@@ -32,5 +32,10 @@ public class OrderServiceImpl implements OrderService {
         mapper.deleteOrderById(id);
     }
 
+    @Override
+    public void addOrder(Order order) {
+        mapper.addOrder(order);
+    }
+
 
 }

@@ -23,4 +23,6 @@ public interface GoodsService {
     void freezeUser(String username);
 
     void deleteGoodsById(int id);
+
+    Goods selectByReId(Goods goods);
 }

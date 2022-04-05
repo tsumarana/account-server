@@ -95,5 +95,11 @@ public class GoodsServiceImpl implements GoodsService {
         mapper.deleteGoodsById(id);
     }
 
+    @Override
+    public Goods selectByReId(Goods goods) {
+        Goods goods1 = mapper.selectByReId(goods);
+        return goods1;
+    }
+
 
 }

@@ -13,8 +13,9 @@ public class Goods {
     private String seller;
     private String username;
     private String status;
+    private String re_id;
 
-    public Goods(Integer id, String title, Integer price, Integer grade, String type, Integer accountGrade, String decorate, String rank, boolean adult, String seller, String username, String status) {
+    public Goods(Integer id, String title, Integer price, Integer grade, String type, Integer accountGrade, String decorate, String rank, boolean adult, String seller, String username, String status, String re_id) {
         this.id = id;
         this.title = title;
         this.price = price;
@@ -27,6 +28,15 @@ public class Goods {
         this.seller = seller;
         this.username = username;
         this.status = status;
+        this.re_id = re_id;
+    }
+
+    public String getRe_id() {
+        return re_id;
+    }
+
+    public void setRe_id(String re_id) {
+        this.re_id = re_id;
     }
 
     public String getStatus() {

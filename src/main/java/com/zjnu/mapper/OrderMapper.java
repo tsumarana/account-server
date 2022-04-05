@@ -21,4 +21,8 @@ public interface OrderMapper {
     //下架处理
     @Delete("delete from tb_order where brand_id = #{id}")
     void deleteOrderById(int id);
+
+    @ResultMap("orderResultMap")
+    @Insert("insert into tb_order values(null,'',#{seller},#{time},#{name},#{brandId},'true',#{price})")
+    void addOrder(Order order);
 }

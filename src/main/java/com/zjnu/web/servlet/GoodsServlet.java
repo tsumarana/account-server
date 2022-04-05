@@ -2,6 +2,7 @@ package com.zjnu.web.servlet;
 
 import com.alibaba.fastjson.JSON;
 import com.zjnu.pojo.Goods;
+import com.zjnu.pojo.Order;
 import com.zjnu.pojo.PageBean;
 import com.zjnu.service.GoodsService;
 import com.zjnu.service.OrderService;
@@ -13,6 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/goods")
@@ -21,6 +25,7 @@ public class GoodsServlet {
     private GoodsService goodsService;
     @Autowired
     private OrderService orderService;
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     //查看信息
     @RequestMapping("/selectInfo")
     public void selectInfo(HttpServletRequest req,HttpServletResponse resp) throws IOException {
@@ -82,7 +87,17 @@ public class GoodsServlet {
         req.setCharacterEncoding("utf-8");
         String readLine = req.getReader().readLine();
         Goods goods = JSON.parseObject(readLine, Goods.class);
+        String reId= String.valueOf(UUID.randomUUID());
+        goods.setRe_id(reId);
         goodsService.addGoods(goods);
+        Goods goods1 = goodsService.selectByReId(goods);
+        Order order = new Order();
+        order.setBrandId(String.valueOf(goods1.getId()));
+        order.setSeller(goods1.getSeller());
+        order.setName(goods1.getTitle());
+        order.setPrice(String.valueOf(goods1.getPrice()));
+        order.setTime(sdf.format(new Date()));
+        orderService.addOrder(order);
         resp.getWriter().write("success");
     }
     //通过id删除商品

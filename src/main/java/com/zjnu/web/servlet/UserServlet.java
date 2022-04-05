@@ -7,16 +7,20 @@ import com.zjnu.pojo.PageBean;
 import com.zjnu.pojo.User;
 import com.zjnu.service.*;
 import com.zjnu.util.GenerateToken;
+import org.apache.axis.encoding.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.awt.image.RenderedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -47,7 +51,14 @@ public class UserServlet {
         req.setCharacterEncoding("utf-8");
         BufferedReader reader = req.getReader();
         String string = reader.readLine();
+        String checkCode = JSONObject.parseObject(string).getString("checkCode");
         LoginBean loginBean = new LoginBean();
+//        HttpSession session = req.getSession();
+//        String checkCode_re = (String) session.getAttribute("checkCode");
+//        if(!checkCode.trim().equals(checkCode_re.trim())){
+//            resp.getWriter().write("checkError");
+//            return ;
+//        }
         String id = req.getSession().getId();
         User user = JSON.parseObject(string,User.class);
         User user1 = userService.selectUser(user);
@@ -98,8 +109,9 @@ public class UserServlet {
             checkCode_re = checkCode_re.trim();
 
         }
-//        boolean flag = checkCode.equals(checkCode_re);
-        boolean flag = true;
+        boolean flag = checkCode.equals(checkCode_re);
+        System.out.println(flag);
+//        boolean flag = true;
         if(flag && userService.selectUserByUserInfo(user) == null ){
             userService.insertUser(user);
             resp.getWriter().write("success");
@@ -230,19 +242,21 @@ public class UserServlet {
     public Map<String,Object> fileupload(MultipartFile file, HttpServletRequest req){
         Map<String,Object> result = new HashMap<>();
         String originName = file.getOriginalFilename();
-        if(!originName.endsWith("jpeg")){
+        String s = originName;
+        String s1 = s.split("\\.")[1];
+        if(!originName.endsWith("jpeg")&&!originName.endsWith("jpg")&&!originName.endsWith("png")){
             result.put("status","error");
             result.put("msg","文件类型不对");
             return result;
         }
         String format = sdf.format(new Date());
-        String realPath = "d://filetest"+format;
+        String realPath = "D:\\Vue-workspace\\account-store-online\\src\\assets\\images\\avatar"+format;
         System.out.println(realPath);
         File folder = new File(realPath);
         if(!folder.exists()){
             folder.mkdir();
         }
-        String newName = UUID.randomUUID().toString() + ".jpeg";
+        String newName = UUID.randomUUID().toString() + s1;
         try {
             file.transferTo(new File(folder,newName));
             result.put("status","success");
@@ -252,6 +266,7 @@ public class UserServlet {
             result.put("status","error");
             result.put("msg",e.getMessage());
         }
+
         return result;
     }
 }
