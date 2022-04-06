@@ -2,6 +2,8 @@ package com.zjnu.web.servlet;
 
 import com.alibaba.fastjson.JSON;
 import com.zjnu.pojo.Message;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -12,7 +14,11 @@ import java.util.concurrent.CopyOnWriteArraySet;
    * @ServerEndpoint 注解是一个类层次的注解，它的功能主要是将目前的类定义成一个websocket服务器端,
    * 注解的值将被用于监听用户连接的终端访问URL地址,客户端可以通过这个URL来连接到WebSocket服务器端
    */
+
+
+
 @ServerEndpoint("/websocket")
+@Component
 public class webSocketServlet {
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static int onlineCount = 0;

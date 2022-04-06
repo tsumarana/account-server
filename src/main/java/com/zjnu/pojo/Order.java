@@ -9,8 +9,9 @@ public class Order {
     private String  brandId;
     private String status;
     private String price;
+    private String img;
 
-    public Order(int id, String buyer, String seller, String time, String name, String brandId, String status, String price) {
+    public Order(int id, String buyer, String seller, String time, String name, String brandId, String status, String price, String img) {
         this.id = id;
         this.buyer = buyer;
         this.seller = seller;
@@ -19,19 +20,33 @@ public class Order {
         this.brandId = brandId;
         this.status = status;
         this.price = price;
+        this.img = img;
     }
 
     public Order() {
     }
 
-    public Order(int id, String buyer, String seller, String time, String name, String brandId, String status) {
-        this.id = id;
-        this.buyer = buyer;
-        this.seller = seller;
-        this.time = time;
-        this.name = name;
-        this.brandId = brandId;
-        this.status = status;
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", buyer='" + buyer + '\'' +
+                ", seller='" + seller + '\'' +
+                ", time='" + time + '\'' +
+                ", name='" + name + '\'' +
+                ", brandId='" + brandId + '\'' +
+                ", status='" + status + '\'' +
+                ", price='" + price + '\'' +
+                ", img='" + img + '\'' +
+                '}';
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 
     public String getPrice() {
@@ -98,16 +113,4 @@ public class Order {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", buyer='" + buyer + '\'' +
-                ", seller='" + seller + '\'' +
-                ", time='" + time + '\'' +
-                ", name='" + name + '\'' +
-                ", brandId='" + brandId + '\'' +
-                ", status='" + status + '\'' +
-                '}';
-    }
 }

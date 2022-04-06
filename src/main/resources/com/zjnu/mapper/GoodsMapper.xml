@@ -8,6 +8,29 @@
         <result property="accountGrade" column="account_grade"></result>
     </resultMap>
 
+    <select id="selectGoods" resultMap="goodsResultMap">
+        select * from tb_goods
+        <where>
+            <if test="title !=null and title !=''">
+                and title like #{title}
+            </if>
+            <if test="type !=null and type !=''">
+                and type like #{type}
+            </if>
+            <if test="seller !=null and seller !=''">
+                and seller like #{seller}
+            </if>
+            <if test="price > 0 ">
+                and  price      &lt;=  #{price}
+            </if>
+            <if test="rank !=null and rank !=''">
+                and rank like #{rank}
+            </if>
+            <if test="1==1">
+                and status = 'true'
+            </if>
+        </where>
+    </select>
     <select id="selectByPageAndCondition" resultMap="goodsResultMap">
         select * from tb_goods
         <where>
@@ -21,13 +44,10 @@
                 and seller like #{goods.seller}
             </if>
             <if test="goods.price > 0 ">
-                and  price      &lt;    #{goods.price}
+                and  price      &lt;=    #{goods.price}
             </if>
             <if test="goods.rank !=null and goods.rank !=''">
                 and rank like #{goods.rank}
-            </if>
-            <if test="1==1">
-                and status = 'true'
             </if>
         </where>
         limit #{begin},#{size}

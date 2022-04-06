@@ -53,12 +53,12 @@ public class UserServlet {
         String string = reader.readLine();
         String checkCode = JSONObject.parseObject(string).getString("checkCode");
         LoginBean loginBean = new LoginBean();
-//        HttpSession session = req.getSession();
-//        String checkCode_re = (String) session.getAttribute("checkCode");
-//        if(!checkCode.trim().equals(checkCode_re.trim())){
-//            resp.getWriter().write("checkError");
-//            return ;
-//        }
+        HttpSession session = req.getSession();
+        String checkCode_re = (String) session.getAttribute("checkCode");
+        if(!checkCode.trim().equals(checkCode_re.trim())){
+            resp.getWriter().write("checkError");
+            return ;
+        }
         String id = req.getSession().getId();
         User user = JSON.parseObject(string,User.class);
         User user1 = userService.selectUser(user);
@@ -104,10 +104,9 @@ public class UserServlet {
         String checkCode = JSONObject.parseObject(string).getString("check");
         HttpSession session = req.getSession();
         String checkCode_re = (String) session.getAttribute("checkCode");
-        if(checkCode != "" && checkCode_re!="" && checkCode_re!= null && checkCode != null){
-            checkCode = checkCode.toUpperCase().trim();
-            checkCode_re = checkCode_re.trim();
-
+        if(!checkCode.trim().equals(checkCode_re.trim())){
+            resp.getWriter().write("checkError");
+            return ;
         }
         boolean flag = checkCode.equals(checkCode_re);
         System.out.println(flag);
@@ -235,7 +234,7 @@ public class UserServlet {
         
     }
 
-    //上传图片
+    //上传头像
     SimpleDateFormat sdf = new SimpleDateFormat("/yyyy-MM-dd");
 
     @RequestMapping("/upload")
@@ -250,21 +249,21 @@ public class UserServlet {
             return result;
         }
         String format = sdf.format(new Date());
-        String realPath = "D:\\Vue-workspace\\account-store-online\\src\\assets\\images\\avatar"+format;
-        System.out.println(realPath);
+
+        String realPath = "C:\\Program Files\\Nginx\\nginx-1.20.2\\html\\data\\avatar"+format;
         File folder = new File(realPath);
         if(!folder.exists()){
             folder.mkdir();
         }
-        String newName = UUID.randomUUID().toString() + s1;
+        String newName = UUID.randomUUID().toString() +'.'+ s1;
         try {
             file.transferTo(new File(folder,newName));
             result.put("status","success");
-            String url = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + format + newName;
+            String url = "http://localhost/data/avatar"+format+'/'+newName;
             result.put("url",url);
         } catch (IOException e) {
             result.put("status","error");
-            result.put("msg",e.getMessage());
+            result.put("msg","error");
         }
 
         return result;

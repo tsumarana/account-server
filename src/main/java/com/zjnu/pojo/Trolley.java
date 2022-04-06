@@ -9,8 +9,9 @@ public class Trolley {
     private String username;
     private String seller;
     private String status;
+    private String img;
 
-    public Trolley(int id, int brandId, String name, String count, String price, String username, String seller, String status) {
+    public Trolley(int id, int brandId, String name, String count, String price, String username, String seller, String status, String img) {
         this.id = id;
         this.brandId = brandId;
         this.name = name;
@@ -19,14 +20,7 @@ public class Trolley {
         this.username = username;
         this.seller = seller;
         this.status = status;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+        this.img = img;
     }
 
     @Override
@@ -40,7 +34,24 @@ public class Trolley {
                 ", username='" + username + '\'' +
                 ", seller='" + seller + '\'' +
                 ", status='" + status + '\'' +
+                ", img='" + img + '\'' +
                 '}';
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Trolley() {

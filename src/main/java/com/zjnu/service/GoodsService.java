@@ -3,6 +3,8 @@ package com.zjnu.service;
 import com.zjnu.pojo.Goods;
 import com.zjnu.pojo.PageBean;
 
+import java.util.List;
+
 public interface GoodsService {
     public Goods selectInfo(int id);
 
@@ -25,4 +27,6 @@ public interface GoodsService {
     void deleteGoodsById(int id);
 
     Goods selectByReId(Goods goods);
+
+    List<Goods> selectGoods(Goods goods);
 }

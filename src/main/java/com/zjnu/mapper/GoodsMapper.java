@@ -19,7 +19,7 @@ public interface GoodsMapper {
     List<Goods> selectAll();
     //新增
     @ResultMap("goodsResultMap")
-    @Insert("insert into tb_goods values(null,#{title},#{price},#{grade},#{type},#{accountGrade},#{decorate},#{rank},#{adult},#{seller},'true',#{re_id})")
+    @Insert("insert into tb_goods values(null,#{title},#{price},#{grade},#{type},#{accountGrade},#{decorate},#{rank},#{adult},#{seller},'true',#{re_id},#{img})")
     void addGoods(Goods goods);
     //通过id删除
     @Delete("delete from tb_goods where id = #{id}")
@@ -45,7 +45,8 @@ public interface GoodsMapper {
     //分页条件查询
     @ResultMap("goodsResultMap")
     List<Goods> selectByPageAndCondition(@Param("begin") int begin,@Param("size") int size,@Param("goods") Goods goods);
-
+    
+    List<Goods> selectGoods(Goods goods);
     //数目查询
     int selectTotalCountByCondition(Goods goods);
     //通过用户名删除

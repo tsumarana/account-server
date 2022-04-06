@@ -23,6 +23,6 @@ public interface OrderMapper {
     void deleteOrderById(int id);
 
     @ResultMap("orderResultMap")
-    @Insert("insert into tb_order values(null,'',#{seller},#{time},#{name},#{brandId},'true',#{price})")
+    @Insert("insert into tb_order values(null,'',#{seller},#{time},#{name},#{brandId},'true',#{price},#{img})")
     void addOrder(Order order);
 }

@@ -101,5 +101,23 @@ public class GoodsServiceImpl implements GoodsService {
         return goods1;
     }
 
+    @Override
+    public List<Goods> selectGoods(Goods _goods) {
+        String title = _goods.getTitle();
+        if(title != null && title.length() > 0){
+            _goods.setTitle("%"+title+"%");
+        }
+        String type = _goods.getType();
+        if(type != null && type.length() > 0){
+            _goods.setType("%"+type+"%");
+        }
+        String seller = _goods.getSeller();
+        if(seller != null && seller.length()>0){
+            _goods.setSeller("%"+seller+"%");
+        }
+        List<Goods> goods = mapper.selectGoods(_goods);
+        return goods;
+    }
+
 
 }

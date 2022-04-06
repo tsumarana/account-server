@@ -7,16 +7,17 @@ import com.zjnu.pojo.PageBean;
 import com.zjnu.service.GoodsService;
 import com.zjnu.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/goods")
@@ -25,7 +26,7 @@ public class GoodsServlet {
     private GoodsService goodsService;
     @Autowired
     private OrderService orderService;
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat sdf = new SimpleDateFormat("/yyyy-MM-dd");
     //查看信息
     @RequestMapping("/selectInfo")
     public void selectInfo(HttpServletRequest req,HttpServletResponse resp) throws IOException {
@@ -50,6 +51,12 @@ public class GoodsServlet {
         //写数据
         resp.setContentType("text/json;charset=utf-8");
         resp.getWriter().write(jsonString);
+    }
+    //条件查询
+    @RequestMapping("selectGoods")
+    public  List<Goods> selectGoods(@RequestBody Goods goods, HttpServletResponse resp) throws IOException {
+        List<Goods> goods1 = goodsService.selectGoods(goods);
+        return goods1;
     }
     //按条件分页查询
     @RequestMapping("/selectByPageAndCondition")
@@ -108,5 +115,37 @@ public class GoodsServlet {
         Goods goods = JSON.parseObject(readLine, Goods.class);
         goodsService.deleteById(goods);
         resp.getWriter().write("success");
+    }
+    //上传商品图片
+    @RequestMapping("/upload")
+    public Map<String,Object> fileupload(MultipartFile file, HttpServletRequest req){
+        Map<String,Object> result = new HashMap<>();
+        String originName = file.getOriginalFilename();
+        String s = originName;
+        String s1 = s.split("\\.")[1];
+        if(!originName.endsWith("jpeg")&&!originName.endsWith("jpg")&&!originName.endsWith("png")){
+            result.put("status","error");
+            result.put("msg","文件类型不对");
+            return result;
+        }
+        String format = sdf.format(new Date());
+
+        String realPath = "C:\\Program Files\\Nginx\\nginx-1.20.2\\html\\data\\brand"+format;
+        File folder = new File(realPath);
+        if(!folder.exists()){
+            folder.mkdir();
+        }
+        String newName = UUID.randomUUID().toString() +'.'+ s1;
+        try {
+            file.transferTo(new File(folder,newName));
+            result.put("status","success");
+            String url = "http://localhost/data/brand"+format+'/'+newName;
+            result.put("url",url);
+        } catch (IOException e) {
+            result.put("status","error");
+            result.put("msg","error");
+        }
+
+        return result;
     }
 }
