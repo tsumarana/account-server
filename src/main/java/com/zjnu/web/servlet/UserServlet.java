@@ -256,7 +256,7 @@ public class UserServlet {
         if(!folder.exists()){
             folder.mkdir();
         }
-        String newName = UUID.randomUUID().toString() + s1;
+        String newName = UUID.randomUUID().toString() +"."+ s1;
         try {
             file.transferTo(new File(folder,newName));
             result.put("status","success");
