@@ -2,6 +2,7 @@ package com.zjnu.web.servlet;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.zjnu.pojo.Friend;
 import com.zjnu.pojo.LoginBean;
 import com.zjnu.pojo.PageBean;
 import com.zjnu.pojo.User;
@@ -53,12 +54,12 @@ public class UserServlet {
         String string = reader.readLine();
         String checkCode = JSONObject.parseObject(string).getString("checkCode");
         LoginBean loginBean = new LoginBean();
-//        HttpSession session = req.getSession();
-//        String checkCode_re = (String) session.getAttribute("checkCode");
-//        if(!checkCode.trim().equals(checkCode_re.trim())){
-//            resp.getWriter().write("checkError");
-//            return ;
-//        }
+        HttpSession session = req.getSession();
+        String checkCode_re = (String) session.getAttribute("checkCode");
+        if(!checkCode.trim().equals(checkCode_re.trim())){
+            resp.getWriter().write("checkError");
+            return ;
+        }
         String id = req.getSession().getId();
         User user = JSON.parseObject(string,User.class);
         User user1 = userService.selectUser(user);
@@ -104,10 +105,9 @@ public class UserServlet {
         String checkCode = JSONObject.parseObject(string).getString("check");
         HttpSession session = req.getSession();
         String checkCode_re = (String) session.getAttribute("checkCode");
-        if(checkCode != "" && checkCode_re!="" && checkCode_re!= null && checkCode != null){
-            checkCode = checkCode.toUpperCase().trim();
-            checkCode_re = checkCode_re.trim();
-
+        if(!checkCode.trim().equals(checkCode_re.trim())){
+            resp.getWriter().write("checkError");
+            return ;
         }
         boolean flag = checkCode.equals(checkCode_re);
         System.out.println(flag);
@@ -195,12 +195,14 @@ public class UserServlet {
     //修改用户信息
     @RequestMapping("/alterUserInfo")
     public void alterUserInfo(HttpServletRequest req,HttpServletResponse resp) throws IOException{
-        System.out.println("进入修改");
         req.setCharacterEncoding("utf-8");
         String s = req.getReader().readLine();
-        System.out.println(s);
         User user = JSON.parseObject(s, User.class);
+        Friend friend = new Friend();
+        friend.setImg(user.getImg());
+        friend.setFriendname(user.getUsername());
         userService.alterUserInfo(user);
+        friendService.alterFriendInfo(friend);
     }
 
     @RequestMapping("/logoffUser")
@@ -235,7 +237,7 @@ public class UserServlet {
         
     }
 
-    //上传图片
+    //上传头像
     SimpleDateFormat sdf = new SimpleDateFormat("/yyyy-MM-dd");
 
     @RequestMapping("/upload")
@@ -250,21 +252,23 @@ public class UserServlet {
             return result;
         }
         String format = sdf.format(new Date());
-        String realPath = "D:\\Vue-workspace\\account-store-online\\src\\assets\\images\\avatar"+format;
-        System.out.println(realPath);
+
+        String realPath = "D:\\Nginx\\nginx-1.20.2\\html\\data\\avatar"+format;
         File folder = new File(realPath);
         if(!folder.exists()){
             folder.mkdir();
         }
         String newName = UUID.randomUUID().toString() +"."+ s1;
+
+
         try {
             file.transferTo(new File(folder,newName));
             result.put("status","success");
-            String url = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + format + newName;
+            String url = "http://localhost/data/avatar"+format+'/'+newName;
             result.put("url",url);
         } catch (IOException e) {
             result.put("status","error");
-            result.put("msg",e.getMessage());
+            result.put("msg","error");
         }
 
         return result;

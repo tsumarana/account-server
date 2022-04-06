@@ -20,7 +20,7 @@ public interface TrolleyMapper {
     void saveCount(Trolley trolley);
     //新增
     @ResultMap("trolleyResultMap")
-    @Insert("insert into tb_trolley values (null,#{brandId},#{name},1,#{username},#{price},#{seller},'true')")
+    @Insert("insert into tb_trolley values (null,#{brandId},#{name},1,#{username},#{price},#{seller},'true',#{img})")
     void addTrolley(Trolley trolley);
     //删除
     @Delete("delete from tb_trolley where username = #{username} OR seller = #{username}")

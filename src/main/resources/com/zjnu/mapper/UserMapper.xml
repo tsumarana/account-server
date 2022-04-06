@@ -30,7 +30,7 @@
     </select>
 
     <update id="alterUserInfo" >
-        update tb_user set email = #{email},phone = #{phone},id_card = #{idCard},name = #{name} where id = #{id};
+        update tb_user set email = #{email},phone = #{phone},id_card = #{idCard},name = #{name},img = #{img} where id = #{id};
     </update>
 
     <select id="selectUserByPage" resultMap="userResultMap">

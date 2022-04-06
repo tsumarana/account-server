@@ -9,8 +9,10 @@ public class Order {
     private String  brandId;
     private String status;
     private String price;
+    private String img;
+    private String re_id;
 
-    public Order(int id, String buyer, String seller, String time, String name, String brandId, String status, String price) {
+    public Order(int id, String buyer, String seller, String time, String name, String brandId, String status, String price, String img, String re_id) {
         this.id = id;
         this.buyer = buyer;
         this.seller = seller;
@@ -19,19 +21,43 @@ public class Order {
         this.brandId = brandId;
         this.status = status;
         this.price = price;
+        this.img = img;
+        this.re_id = re_id;
     }
 
     public Order() {
     }
 
-    public Order(int id, String buyer, String seller, String time, String name, String brandId, String status) {
-        this.id = id;
-        this.buyer = buyer;
-        this.seller = seller;
-        this.time = time;
-        this.name = name;
-        this.brandId = brandId;
-        this.status = status;
+    public String getRe_id() {
+        return re_id;
+    }
+
+    public void setRe_id(String re_id) {
+        this.re_id = re_id;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", buyer='" + buyer + '\'' +
+                ", seller='" + seller + '\'' +
+                ", time='" + time + '\'' +
+                ", name='" + name + '\'' +
+                ", brandId='" + brandId + '\'' +
+                ", status='" + status + '\'' +
+                ", price='" + price + '\'' +
+                ", img='" + img + '\'' +
+                ", re_id='" + re_id + '\'' +
+                '}';
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 
     public String getPrice() {
@@ -98,16 +124,4 @@ public class Order {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", buyer='" + buyer + '\'' +
-                ", seller='" + seller + '\'' +
-                ", time='" + time + '\'' +
-                ", name='" + name + '\'' +
-                ", brandId='" + brandId + '\'' +
-                ", status='" + status + '\'' +
-                '}';
-    }
 }

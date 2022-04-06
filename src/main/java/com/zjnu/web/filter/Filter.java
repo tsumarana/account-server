@@ -7,12 +7,15 @@ import com.zjnu.pojo.User;
 import com.zjnu.service.UserService;
 import com.zjnu.util.GenerateToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+@Configuration
 @WebFilter("/*")
 public class Filter implements javax.servlet.Filter {
     GenerateToken generateToken = new GenerateToken();
@@ -53,9 +56,8 @@ public class Filter implements javax.servlet.Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         LoginBean loginBean = null;
         HttpServletRequest req = (HttpServletRequest) servletRequest;
-
-        String s = req.getRequestURI().split("tomcat-demo1")[1];
-        String str  =  req.getRequestURI();
+//        System.out.println(req.getRequestURI());
+        String s = req.getRequestURI();
         String auth2="{'/user/selectUserByPage':true,'/user/logoffUser':true}";
         //过滤连接websoket的服务的连接
 //        if(s.equals("/websocket")){

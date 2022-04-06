@@ -52,12 +52,16 @@ public class FriendServlet {
         req.setCharacterEncoding("utf-8");
         String s = req.getReader().readLine();
         Friend friend = JSON.parseObject(s, Friend.class);
-        friendService.addFriend(friend);
+        if(friendService.isExist(friend)) {
+            friendService.addFriend(friend);
+        }
         String username = friend.getUsername();
         friend.setUsername(friend.getFriendname());
         friend.setFriendname(username);
         friend.setImg(friend.getMyImg());
-        friendService.addFriend(friend);
+        if(friendService.isExist(friend)) {
+            friendService.addFriend(friend);
+        }
     }
 
 }

@@ -42,4 +42,17 @@ public class FriendServiceImpl implements FriendService {
     public void freezeUser(String username) {
         mapper.freezeUser(username);
     }
+
+    @Override
+    public void alterFriendInfo(Friend friend) {
+        mapper.alterFriendInfo(friend);
+    }
+
+    @Override
+    public boolean isExist(Friend friend) {
+        if(mapper.isExist(friend) != null){
+            return false;
+        }
+        return true;
+    }
 }

@@ -22,4 +22,12 @@ public interface FriendMapper {
     //冻结
     @Update("update tb_friend set status = 'false' where user_name = #{username} OR friend_name = #{username}")
     void freezeUser(String username);
+
+    @ResultMap("friendResultMap")
+    @Update("update tb_friend set img = #{img} where friend_name = #{friendname}")
+    void alterFriendInfo(Friend friend);
+    //是否已经存在
+    @ResultMap("friendResultMap")
+    @Select("select * from tb_friend where friend_name = #{friendname} and user_name = #{username}")
+    Friend isExist(Friend friend);
 }

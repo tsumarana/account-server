@@ -14,8 +14,9 @@ public class Goods {
     private String username;
     private String status;
     private String re_id;
+    private String img;
 
-    public Goods(Integer id, String title, Integer price, Integer grade, String type, Integer accountGrade, String decorate, String rank, boolean adult, String seller, String username, String status, String re_id) {
+    public Goods(Integer id, String title, Integer price, Integer grade, String type, Integer accountGrade, String decorate, String rank, boolean adult, String seller, String username, String status, String re_id, String img) {
         this.id = id;
         this.title = title;
         this.price = price;
@@ -29,22 +30,7 @@ public class Goods {
         this.username = username;
         this.status = status;
         this.re_id = re_id;
-    }
-
-    public String getRe_id() {
-        return re_id;
-    }
-
-    public void setRe_id(String re_id) {
-        this.re_id = re_id;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+        this.img = img;
     }
 
     @Override
@@ -62,7 +48,33 @@ public class Goods {
                 ", seller='" + seller + '\'' +
                 ", username='" + username + '\'' +
                 ", status='" + status + '\'' +
+                ", re_id='" + re_id + '\'' +
+                ", img='" + img + '\'' +
                 '}';
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getRe_id() {
+        return re_id;
+    }
+
+    public void setRe_id(String re_id) {
+        this.re_id = re_id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getUsername() {

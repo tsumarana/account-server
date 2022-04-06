@@ -11,4 +11,6 @@ public interface FriendService {
     public  void  addFriend(Friend friend);
     void deleteFriendByUsername(String username);
     void freezeUser(String username);
+    void alterFriendInfo(Friend friend);
+    boolean isExist(Friend friend);
 }
