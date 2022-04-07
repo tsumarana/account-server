@@ -61,6 +61,8 @@ public class BOrderServlet<List> {
                 order1.setStatus("待确认");
             }else if(order1.getStatus().equals("finish")){
                 order1.setStatus("完成");
+            }else if(order1.getStatus().equals("fail")){
+                order1.setStatus("取消");
             }
         }
         return orders;
@@ -123,10 +125,19 @@ public class BOrderServlet<List> {
         User user = new User();
         user.setUsername(order.getSeller());
         User seller = userService.selectUserByUsername(user);
-        seller.setSuccess(String.valueOf(Integer.parseInt(seller.getFail()) + 1));
+        if(seller.getFail()==null){
+            seller.setFail("1");
+        }else{
+            seller.setFail(String.valueOf(Integer.parseInt(seller.getFail()) + 1));
+        }
         user.setUsername(order.getBuyer());
         User buyer = userService.selectUserByUsername(user);
-        buyer.setSuccess(String.valueOf(Integer.parseInt(seller.getFail()) + 1));
+        if(buyer.getFail()==null){
+            buyer.setFail("1");
+        }else{
+            buyer.setFail(String.valueOf(Integer.parseInt(seller.getFail()) + 1));
+        }
+
         //confirm 成功失败都记录
         userService.confirm(buyer);
         userService.confirm(seller);

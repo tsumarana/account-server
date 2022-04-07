@@ -253,7 +253,7 @@ public class UserServlet {
         }
         String format = sdf.format(new Date());
 
-        String realPath = "C:\\Program Files\\Nginx\\nginx-1.20.2\\html\\data\\avatar"+format;
+        String realPath = "D:\\Nginx\\nginx-1.20.2\\html\\data\\avatar"+format;
         File folder = new File(realPath);
         if(!folder.exists()){
             folder.mkdir();
