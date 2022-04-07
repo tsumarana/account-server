@@ -59,6 +59,8 @@ public class FriendServlet {
         friend.setUsername(friend.getFriendname());
         friend.setFriendname(username);
         friend.setImg(friend.getMyImg());
+        friend.setSuccess(friend.getMysuccess());
+        friend.setFail(friend.getMyfail());
         if(friendService.isExist(friend)) {
             friendService.addFriend(friend);
         }

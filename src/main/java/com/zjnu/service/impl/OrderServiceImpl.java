@@ -37,5 +37,10 @@ public class OrderServiceImpl implements OrderService {
         mapper.addOrder(order);
     }
 
+    @Override
+    public void confirm(Order order) {
+        mapper.confirm(order);
+    }
+
 
 }

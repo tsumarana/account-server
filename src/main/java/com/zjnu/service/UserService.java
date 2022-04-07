@@ -17,4 +17,5 @@ public interface UserService {
     void cleanToken(User user);
     void logoffUser(User user);
     void freezeUser(User user);
+    void confirm(User user);
 }

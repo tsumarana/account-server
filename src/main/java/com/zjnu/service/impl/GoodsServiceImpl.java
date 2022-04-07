@@ -124,5 +124,10 @@ public class GoodsServiceImpl implements GoodsService {
         mapper.alterByPay(goods);
     }
 
+    @Override
+    public void cancel(Goods goods) {
+        mapper.cancel(goods);
+    }
+
 
 }

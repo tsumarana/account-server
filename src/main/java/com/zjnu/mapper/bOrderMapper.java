@@ -28,4 +28,13 @@ public interface bOrderMapper {
     @ResultMap("borderResultMap")
     @Select("select * from tb_border where id = #{id}")
     Order selectOrderById(Order order);
+
+    @ResultMap("borderResultMap")
+    @Select("select name,id,buyer,seller from tb_border where buyer=#{buyer} and seller = #{seller} and status = 'pay'")
+    List<Order> selectOrderByUser(Order order);
+
+    @Update("update tb_border set status ='finish' where id = #{id}")
+    void confirm(Order order);
+    @Update("update tb_border set status ='fail' where id = #{id}")
+    void cancel(Order order);
 }

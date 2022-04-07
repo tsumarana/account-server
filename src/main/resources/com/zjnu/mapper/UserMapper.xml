@@ -22,7 +22,7 @@
     </select>
 
     <select id="selectByUsername" resultMap="userResultMap">
-        select id,img,user_name,phone,email,id_card,name from tb_user where user_name= #{username} and status = 'true';
+        select id,img,user_name,phone,email,id_card,name,success,fail,success,fail from tb_user where user_name= #{username} and status = 'true';
     </select>
 
     <select id="selectUserByUserInfo" resultMap="userResultMap">
@@ -69,7 +69,7 @@
         </where>
     </select>
     <insert id="insertUser" >
-        insert into tb_user (user_name,password,email,phone,id_card,name,vip,status) values (#{username},#{password},#{email},#{phone},#{idCard},#{name},'0','true');
+        insert into tb_user (user_name,password,email,phone,id_card,name,vip,status) values (#{username},#{password},#{email},#{phone},#{idCard},#{name},'0','true','0','0');
     </insert>
 
     <update id="addToken">

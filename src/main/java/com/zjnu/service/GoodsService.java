@@ -31,4 +31,6 @@ public interface GoodsService {
     List<Goods> selectGoods(Goods goods);
 
     void alterByPay(Goods goods);
+
+    void cancel(Goods goods);
 }

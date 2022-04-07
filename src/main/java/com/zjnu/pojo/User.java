@@ -12,6 +12,24 @@ public class User {
     private String img;
     private String token;
     private String status;
+    private String success;
+    private String fail;
+
+    public String getFail() {
+        return fail;
+    }
+
+    public void setFail(String fail) {
+        this.fail = fail;
+    }
+
+    public String getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(String success) {
+        this.success = success;
+    }
 
     public User(Integer id, String username, String password, String email, String phone, String idCard, String name, String vip, String img, String token, String status) {
         this.id = id;

@@ -55,4 +55,14 @@ public class FriendServiceImpl implements FriendService {
         }
         return true;
     }
+
+    @Override
+    public void confirm(Friend friend) {
+        mapper.confirm(friend);
+    }
+
+    @Override
+    public void cancel(Friend friend) {
+        mapper.cancel(friend);
+    }
 }

@@ -14,7 +14,7 @@ public interface FriendMapper {
     List<Friend> selectAllByUser(Friend friend);
 
     @ResultMap("friendResultMap")
-    @Insert("insert into tb_friend  values (null,#{friendname},#{username},#{img},'true' )")
+    @Insert("insert into tb_friend  values (null,#{friendname},#{username},#{img},'true',#{success},#{fail})")
     void addFriend(Friend friend);
 
     @Delete("delete from tb_friend where user_name = #{username} OR friend_name = #{username}")
@@ -30,4 +30,12 @@ public interface FriendMapper {
     @ResultMap("friendResultMap")
     @Select("select * from tb_friend where friend_name = #{friendname} and user_name = #{username}")
     Friend isExist(Friend friend);
+    //确认
+    @ResultMap("friendResultMap")
+    @Update("update tb_friend set success = #{success} where friend_name = #{friendname}")
+    void confirm(Friend friend);
+    //确认
+    @ResultMap("friendResultMap")
+    @Update("update tb_friend set fail = #{fail} where friend_name = #{friendname}")
+    void cancel(Friend friend);
 }

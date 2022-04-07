@@ -61,4 +61,7 @@ public interface GoodsMapper {
     //购买后将状态变为0
     @Update("update tb_goods set status = 'false' where id = #{id}")
     void alterByPay(Goods goods);
+    //取消
+    @Update("update tb_goods set status = 'true' where id = #{id}")
+    void cancel(Goods goods);
 }

@@ -50,4 +50,8 @@ public interface UserMapper {
 
     @Update("update tb_user set status = 'false' where id=#{id}")
     void freezeUser(User user);
+
+    @Update("update tb_user set success = #{success} ,fail =#{fail} where id= #{id} ")
+    void confirm(User user);
+
 }

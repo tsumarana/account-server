@@ -12,5 +12,8 @@ public interface BOrderService {
      void pay(Order order);
      Order selectByReId(Order order);
      Order selectOrderById(Order order);
+     List<Order> selectOrderByUser(Order order);
+     void confirm(Order order);
+     void cancel(Order order);
 }
 

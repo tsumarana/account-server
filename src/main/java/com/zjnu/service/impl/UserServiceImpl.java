@@ -113,4 +113,11 @@ public class UserServiceImpl implements UserService {
     public void freezeUser(User user) {
         mapper.freezeUser(user);
     }
+
+    @Override
+    public void confirm(User user) {
+        mapper.confirm(user);
+    }
+
+
 }

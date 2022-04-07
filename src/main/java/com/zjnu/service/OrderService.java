@@ -10,4 +10,5 @@ public interface OrderService {
     void freezeUser(String username);
     void deleteOrderById(int id);
     void addOrder(Order order);
+    void confirm(Order order);
 }

@@ -10,7 +10,7 @@ import java.util.List;
 public interface OrderMapper {
     //查询所有
     @ResultMap("orderResultMap")
-    @Select("select * from tb_order where seller =#{seller} and status = 'true'")
+    @Select("select * from tb_order where seller =#{seller} ")
     List<Order> selectSellerOrder(Order order);
 
     @Delete("delete from tb_order where seller = #{username}")
@@ -25,4 +25,8 @@ public interface OrderMapper {
     @ResultMap("orderResultMap")
     @Insert("insert into tb_order values(null,'',#{seller},#{time},#{name},#{brandId},'true',#{price},#{img})")
     void addOrder(Order order);
+
+    @ResultMap("orderResultMap")
+    @Update("update tb_order set status='finish' , buyer = #{buyer} where brand_id = #{brandId}")
+    void confirm(Order order);
 }

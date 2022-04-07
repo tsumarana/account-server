@@ -37,7 +37,10 @@ public class OrderServlet {
         for(Order order1:orders){
             if(order1.getStatus().equals("true")){
                 order1.setStatus("正常");
-            }else{
+            }else if(order1.getStatus().equals("finish")){
+                order1.setStatus("完成");
+            }
+            else{
                 order1.setStatus("冻结");
             }
         }

@@ -7,6 +7,42 @@ public class Friend {
     private  String img;
     private String myImg;
     private String status;
+    private String success;
+    private String fail;
+    private String Mysuccess;
+    private String Myfail;
+
+    public String getMysuccess() {
+        return Mysuccess;
+    }
+
+    public void setMysuccess(String mysuccess) {
+        Mysuccess = mysuccess;
+    }
+
+    public String getMyfail() {
+        return Myfail;
+    }
+
+    public void setMyfail(String myfail) {
+        Myfail = myfail;
+    }
+
+    public String getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(String success) {
+        this.success = success;
+    }
+
+    public String getFail() {
+        return fail;
+    }
+
+    public void setFail(String fail) {
+        this.fail = fail;
+    }
 
     public String getMyImg() {
         return myImg;

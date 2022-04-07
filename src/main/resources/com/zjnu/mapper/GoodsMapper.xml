@@ -71,9 +71,6 @@
             <if test="rank !=null and rank !=''">
                 and rank like #{rank}
             </if>
-            <if test="1==1">
-                and status = 'true'
-            </if>
         </where>
     </select>
 </mapper>

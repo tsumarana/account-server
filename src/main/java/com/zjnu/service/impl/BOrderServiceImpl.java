@@ -38,5 +38,20 @@ public class BOrderServiceImpl implements BOrderService {
         return mapper.selectOrderById(order);
     }
 
+    @Override
+    public List<Order> selectOrderByUser(Order order) {
+        return mapper.selectOrderByUser(order);
+    }
+
+    @Override
+    public void confirm(Order order) {
+        mapper.confirm(order);
+    }
+
+    @Override
+    public void cancel(Order order) {
+        mapper.cancel(order);
+    }
+
 
 }
