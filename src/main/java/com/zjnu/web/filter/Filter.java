@@ -58,7 +58,8 @@ public class Filter implements javax.servlet.Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
 //        System.out.println(req.getRequestURI());
         String s = req.getRequestURI();
-        String auth2="{'/user/selectUserByPage':true,'/user/logoffUser':true}";
+        String auth2="{'/user/selectUserByPage':true,'user/logoffUser':true," +
+                "'user/freezeUser':true,}";
         //过滤连接websoket的服务的连接
 //        if(s.equals("/websocket")){
 //            String token = req.getParameter("token");
@@ -71,12 +72,14 @@ public class Filter implements javax.servlet.Filter {
         if(s.equals("/goods/selectByPageAndCondition")){
             String id = String.valueOf(req.getParameter("id"));
             if(id!=null && id.equals("1")){
-                auth2 = "{'/user/selectUserByPage':true,'/goods/selectByPageAndCondition':true,'/user/logoffUser':true}";
+                auth2 = "{'/user/selectUserByPage':true,'/goods/selectByPageAndCondition':true,'/user/logoffUser':true,'user/freezeUser':true}";
             }
         }
         String auth1 = "{'/message/selectMessage':true,'/friend/selectList':true,'/message/addMessage':true,'/goods/addGoods':true" +
                 ",'/user/selectUserByUsername':true,'/friend/makeFriend':true,'/trolley/selectTrolley':true,'/trolley/deleteTrolley':true" +
-                ",'/trolley/saveCount':true,'/trolley/addTrolley':true}";
+                ",'/trolley/saveCount':true,'/trolley/addTrolley':true,'/order/selectSellerOrder':true,'/order/deleteOrder':true" +
+                ",'/order/delete':true,'/border/addOrder':true,'/border/selectBuyerOrder':true,'/border/pay':true,'/border/selectOrderByUser':true" +
+                ",'/border/confirm':true,'/border/cancel':true}";
         JSONObject jsonObject1 = JSON.parseObject(auth1);
         JSONObject jsonObject2 = JSON.parseObject(auth2);
         String token = req.getHeader("Authorization");

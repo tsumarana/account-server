@@ -33,16 +33,15 @@ public class BOrderServlet<List> {
     FriendService friendService;
     @RequestMapping("addOrder")
     public Order addOrder(@RequestBody Goods goods){
+        System.out.println("添加buyer订单"+goods);
         Order order = new Order();
         order.setBrandId(String.valueOf(goods.getId()));
         order.setBuyer(goods.getUsername());
         order.setImg(goods.getImg());
-        order.setBrandId(String.valueOf(goods.getId()));
         order.setSeller(goods.getSeller());
         order.setName(goods.getTitle());
         order.setTime(sdf.format(new Date()));
         order.setStatus("ing");
-        order.setBuyer(goods.getUsername());
         order.setPrice(String.valueOf(goods.getPrice()));
         String re_id = String.valueOf(UUID.randomUUID());
         order.setRe_id(re_id);

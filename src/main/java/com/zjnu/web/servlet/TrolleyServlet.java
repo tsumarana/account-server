@@ -50,7 +50,7 @@ public class TrolleyServlet {
    }
    //添加到购物车
    @RequestMapping("/addTrolley")
-   public void addTrolley(HttpServletRequest req,HttpServletResponse resp) throws IOException{
+   public String addTrolley(HttpServletRequest req,HttpServletResponse resp) throws IOException{
        System.out.println("添加商品");
        req.setCharacterEncoding("utf-8");
        String s = req.getReader().readLine();
@@ -64,6 +64,7 @@ public class TrolleyServlet {
        trolley.setName(goods.getTitle());
        trolley.setUsername(goods.getUsername());
        trolleyService.addTrolley(trolley);
+       return "success";
    }
 
 }
