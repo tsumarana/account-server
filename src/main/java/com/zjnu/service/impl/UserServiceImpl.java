@@ -1,21 +1,65 @@
 package com.zjnu.service.impl;
 
 import com.zjnu.mapper.UserMapper;
+import com.zjnu.pojo.LoginBean;
 import com.zjnu.pojo.PageBean;
 import com.zjnu.pojo.User;
 import com.zjnu.service.UserService;
+import com.zjnu.util.GenerateToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import static com.zjnu.KeyConfig.Key.Token_Key;
 
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper mapper;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+    private GenerateToken generateToken = new GenerateToken();
+    private String checkCode(User user,String id) {
+        String checkCode = user.getCheck();
+        id = id+ ":" +checkCode;
+        String real_check = stringRedisTemplate.opsForValue().get(id);
+        if(!checkCode.equals(real_check)){
+            return "checkError";
+        }
+        return null;
+    }
+    //登录
     @Override
-    public User selectUser(User user) {
+    public LoginBean selectUser(User user, String id) {
+        String checkError = checkCode(user,id);
+        LoginBean loginBean = new LoginBean();
+        if (checkError != null) {
+            loginBean.setStatus("checkError");
+            return loginBean;
+        };
+        loginBean.setRole("1013");
         User user1 = mapper.selectUser(user);
-        return user1;
+        if(user1 != null ) {
+            //生token
+            String key  = Token_Key;
+            String token = generateToken.generate(id, String.valueOf(user1.getId()),user1.getUsername(), user1.getVip());
+            user1.setToken(token);
+            key += user1.getId();
+            stringRedisTemplate.opsForValue().set(key,token,30, TimeUnit.MINUTES);
+            //写数据
+            if(user1.getVip().trim().equals("1")) {
+                loginBean.setRole("1011");
+            }
+            loginBean.setRole("1012");
+            loginBean.setUsername(user1.getUsername());
+            loginBean.setId(user1.getId());
+            loginBean.setToken(token);
+            loginBean.setImg(user1.getImg());
+        }
+        return loginBean;
     }
 
     @Override
@@ -24,9 +68,17 @@ public class UserServiceImpl implements UserService {
         return user1;
     }
 
+    //注册
     @Override
-    public void insertUser(User user) {
-        mapper.insertUser(user);
+    public String insertUser(User user,String id) {
+        if (checkCode(user,id) != null) {
+            return "checkError";
+        };
+        if(selectUserByUserInfo(user) == null){
+            mapper.insertUser(user);
+            return "success";
+        }
+        return "fail";
     }
 
     @Override
@@ -97,11 +149,14 @@ public class UserServiceImpl implements UserService {
         User user1 = mapper.selectTokenByUsername(user);
         return user1;
     }
-
+    //退出登录
     @Override
-    public void cleanToken(User user) {
-        mapper.cleanToken(user);
-
+    public String cleanToken(User user) {
+        String key  = Token_Key+user.getId();
+        if (stringRedisTemplate.delete(key)) {
+            return "ok";
+        }
+        return "error";
     }
 
     @Override

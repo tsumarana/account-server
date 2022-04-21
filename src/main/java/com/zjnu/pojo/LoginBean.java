@@ -6,8 +6,10 @@ public class LoginBean {
     private String username;
     private int id;
     private String img;
+    private String status;
 
-    public LoginBean(String role, String token, String username, int id, String img) {
+    public LoginBean(String role, String token, String username, int id, String img,String status) {
+        this.status = status;
         this.role = role;
         this.token = token;
         this.username = username;
@@ -23,7 +25,16 @@ public class LoginBean {
                 ", username='" + username + '\'' +
                 ", id=" + id +
                 ", img='" + img + '\'' +
+                ", status='" + status + '\'' +
                 '}';
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getImg() {

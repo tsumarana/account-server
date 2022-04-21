@@ -1,5 +1,7 @@
 package com.zjnu.pojo;
 
+import org.springframework.data.annotation.Transient;
+
 public class User {
     private Integer id;
     private String username;
@@ -14,6 +16,11 @@ public class User {
     private String status;
     private String success;
     private String fail;
+    /**
+     * 校验验证码
+     */
+    @Transient
+    private String check;
 
     public String getFail() {
         return fail;
@@ -31,7 +38,7 @@ public class User {
         this.success = success;
     }
 
-    public User(Integer id, String username, String password, String email, String phone, String idCard, String name, String vip, String img, String token, String status) {
+    public User(Integer id, String username, String password, String email, String phone, String idCard, String name, String vip, String img, String token, String status,String check) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -43,6 +50,7 @@ public class User {
         this.img = img;
         this.token = token;
         this.status = status;
+        this.check = check;
     }
 
     public String getStatus() {
@@ -67,6 +75,9 @@ public class User {
                 ", img='" + img + '\'' +
                 ", token='" + token + '\'' +
                 ", status='" + status + '\'' +
+                ", success='" + success + '\'' +
+                ", fail='" + fail + '\'' +
+                ", check='" + check + '\'' +
                 '}';
     }
 
@@ -166,4 +177,11 @@ public class User {
         this.password = password;
     }
 
+    public String getCheck() {
+        return check;
+    }
+
+    public void setCheck(String check) {
+        this.check = check;
+    }
 }

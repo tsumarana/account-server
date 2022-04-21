@@ -2,6 +2,7 @@ package com.zjnu.web.servlet;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.zjnu.KeyConfig.Key;
 import com.zjnu.pojo.Friend;
 import com.zjnu.pojo.LoginBean;
 import com.zjnu.pojo.PageBean;
@@ -10,6 +11,9 @@ import com.zjnu.service.*;
 import com.zjnu.util.GenerateToken;
 import org.apache.axis.encoding.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +33,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import static com.zjnu.KeyConfig.Key.Token_Key;
 
 @RestController
 @RequestMapping("/user")
@@ -46,80 +53,27 @@ public class UserServlet {
     @Autowired
     private MessageService messageService;
     private GenerateToken generateToken = new GenerateToken();
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
     //校验用户名密码生成token
-    @RequestMapping("/selectUser")
-    public void selectUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        req.setCharacterEncoding("utf-8");
-        BufferedReader reader = req.getReader();
-        String string = reader.readLine();
-        String checkCode = JSONObject.parseObject(string).getString("checkCode");
-        LoginBean loginBean = new LoginBean();
-        HttpSession session = req.getSession();
-        String checkCode_re = (String) session.getAttribute("checkCode");
-        if(!checkCode.trim().equals(checkCode_re.trim())){
-            resp.getWriter().write("checkError");
-            return ;
-        }
-        String id = req.getSession().getId();
-        User user = JSON.parseObject(string,User.class);
-        User user1 = userService.selectUser(user);
-        resp.setContentType("text/json;charset=utf-8");
-        if(user1 != null ) {
-            //生产token
-            String generate = generateToken.generate(id, String.valueOf(user1.getId()),user1.getUsername(), user1.getVip());
-            user1.setToken(generate);
-            userService.addToken(user1);
-            //写数据
-            if(user1.getVip().trim().equals("1")) {
-                loginBean.setRole("1011");
-
-            }
-            else{
-                loginBean.setRole("1012");
-            }
-            loginBean.setUsername(user1.getUsername());
-            loginBean.setId(user1.getId());
-            loginBean.setToken(generate);
-            loginBean.setImg(user1.getImg());
-        }else{
-            loginBean.setRole("1013");
-        }
-        String s = JSON.toJSONString(loginBean);
-        resp.getWriter().write(s);
+    @PostMapping("/selectUser")
+    public LoginBean selectUser(@RequestBody User user, HttpServletRequest request) throws IOException {
+        return userService.selectUser(user,request.getSession().getId());
     }
 
-    @RequestMapping("/exit")
-    public void exit(HttpServletRequest req,HttpServletResponse resp) throws IOException{
-        req.setCharacterEncoding("utf-8");
-        String s = req.getReader().readLine();
-        User user = JSON.parseObject(s, User.class);
-        userService.cleanToken(user);
+    //退出登录
+    @PostMapping("/exit")
+    public String exit(@RequestBody User user) throws IOException{
+        return userService.cleanToken(user);
     }
 
-    @RequestMapping("/selectUserByUserInfo")
-    public void selectUserByUserInfo(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        req.setCharacterEncoding("utf-8");
-        BufferedReader reader = req.getReader();
-        String string = reader.readLine();
-        User user = JSON.parseObject(string,User.class);
-        String checkCode = JSONObject.parseObject(string).getString("check");
-        HttpSession session = req.getSession();
-        String checkCode_re = (String) session.getAttribute("checkCode");
-        if(!checkCode.trim().equals(checkCode_re.trim())){
-            resp.getWriter().write("checkError");
-            return ;
-        }
-        boolean flag = checkCode.equals(checkCode_re);
-        System.out.println(flag);
-//        boolean flag = true;
-        if(flag && userService.selectUserByUserInfo(user) == null ){
-            userService.insertUser(user);
-            resp.getWriter().write("success");
-        }
-        else {
-            resp.getWriter().write("fail");
-        }
+    //注册
+    @PostMapping("/selectUserByUserInfo")
+    public String selectUserByUserInfo(@RequestBody User user, HttpServletRequest request) throws IOException {
+        return userService.insertUser(user, request.getSession().getId());
     }
+
     //分页查询用户
     @RequestMapping("/selectUserByPage")
     public void selectUserByPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -148,26 +102,6 @@ public class UserServlet {
         resp.setContentType("text/json;charset=utf-8");
         resp.getWriter().write("success");
     }
-    //检查缓存
-    @RequestMapping("/checkSession")
-    public void checkSession(HttpServletRequest req, HttpServletResponse resp) throws IOException{
-        HttpSession session = req.getSession();
-        User user = (User) session.getAttribute("user");
-        resp.setContentType("text/json;charset=utf-8");
-        if(user != null ){
-            String jsonString = JSON.toJSONString(user);
-            resp.getWriter().write(jsonString);
-        }
-        else {
-            resp.getWriter().write("false");
-        }
-    }
-    //清楚缓存
-    @RequestMapping("/cleanSession")
-    public void cleanSession(HttpServletRequest req, HttpServletResponse resp) throws IOException{
-        HttpSession session = req.getSession();
-        session.setAttribute("user",null);
-    }
     //根据id查找用户
     @RequestMapping("/selectUserById")
     public void selectUserById(HttpServletRequest req,HttpServletResponse resp) throws IOException{
@@ -181,7 +115,7 @@ public class UserServlet {
         String jsonString = JSON.toJSONString(user);
         resp.getWriter().write(jsonString);
     }
-    //通过用户名查找用户
+    //TODO 通过用户名查找用户
     @RequestMapping("/selectUserByUsername")
     public void selectUserByUsername(HttpServletRequest req ,HttpServletResponse resp) throws IOException{
         req.setCharacterEncoding("utf-8");
@@ -192,7 +126,7 @@ public class UserServlet {
         resp.setContentType("text/json;charset=utf-8");
         resp.getWriter().write(jsonString);
     }
-    //修改用户信息
+    //TODO 修改用户信息
     @RequestMapping("/alterUserInfo")
     public void alterUserInfo(HttpServletRequest req,HttpServletResponse resp) throws IOException{
         req.setCharacterEncoding("utf-8");
@@ -204,7 +138,7 @@ public class UserServlet {
         userService.alterUserInfo(user);
         friendService.alterFriendInfo(friend);
     }
-
+    //TODO 注销
     @RequestMapping("/logoffUser")
     public void logoffUser(HttpServletRequest req,HttpServletResponse resp)throws IOException{
         req.setCharacterEncoding("utf-8");
@@ -220,7 +154,7 @@ public class UserServlet {
         messageService.deleteMessageByUsername(username);
 
     }
-    //冻结用户
+    //TODO 冻结用户
     @RequestMapping("freezeUser")
     public void freezeUser(HttpServletRequest req,HttpServletResponse resp) throws IOException{
         req.setCharacterEncoding("utf-8");
@@ -237,7 +171,7 @@ public class UserServlet {
         
     }
 
-    //上传头像
+    //TODO 上传头像
     SimpleDateFormat sdf = new SimpleDateFormat("/yyyy-MM-dd");
 
     @RequestMapping("/upload")
@@ -253,7 +187,7 @@ public class UserServlet {
         }
         String format = sdf.format(new Date());
 
-        String realPath = "C:\\Program Files\\Nginx\\nginx-1.20.2\\html\\data\\avatar"+format;
+        String realPath = "D:\\Nginx\\nginx-1.20.2\\html\\data\\avatar"+format;
         File folder = new File(realPath);
         if(!folder.exists()){
             folder.mkdir();

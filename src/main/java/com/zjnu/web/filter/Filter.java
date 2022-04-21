@@ -9,11 +9,15 @@ import com.zjnu.util.GenerateToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import static com.zjnu.KeyConfig.Key.Token_Key;
 
 @Configuration
 @WebFilter("/*")
@@ -22,6 +26,8 @@ public class Filter implements javax.servlet.Filter {
     @Autowired
     UserService userService;
     String role;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -31,22 +37,15 @@ public class Filter implements javax.servlet.Filter {
     public LoginBean checkToken(String token){
         LoginBean loginBean = generateToken.verify(token);
         try{
-            String verify = loginBean.getUsername().trim();
-        if(!verify.equals("")){
-            User user = new User();
-            user.setUsername(verify);
-            user = userService.selectTokenByUsername(user);
-            if(user.getToken().equals(token)){
-                if(user.getVip().equals("1")){
-                    loginBean.setRole("201");
-
-                }else {
-                    loginBean.setRole("200");
+            int id = loginBean.getId();
+            if(id != 0 ){
+                String real_token = stringRedisTemplate.opsForValue().get(Token_Key + id);
+                if(token.equals(real_token)){
+                    stringRedisTemplate.expire(Token_Key + id,30, TimeUnit.MINUTES);
                 }
-            }
-        }else {
+            }else {
             loginBean.setRole("401");
-        }
+            }
         }catch (Exception e){
             System.out.println("校验的token伪造");
         }
@@ -56,7 +55,6 @@ public class Filter implements javax.servlet.Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         LoginBean loginBean = null;
         HttpServletRequest req = (HttpServletRequest) servletRequest;
-//        System.out.println(req.getRequestURI());
         String s = req.getRequestURI();
         String auth2="{'/user/selectUserByPage':true,'user/logoffUser':true," +
                 "'user/freezeUser':true,}";
@@ -68,7 +66,6 @@ public class Filter implements javax.servlet.Filter {
 //                return;
 //            }
 //        }
-        System.out.println("调用接口"+s);
         if(s.equals("/goods/selectByPageAndCondition")){
             String id = String.valueOf(req.getParameter("id"));
             if(id!=null && id.equals("1")){
@@ -82,6 +79,7 @@ public class Filter implements javax.servlet.Filter {
                 ",'/border/confirm':true,'/border/cancel':true}";
         JSONObject jsonObject1 = JSON.parseObject(auth1);
         JSONObject jsonObject2 = JSON.parseObject(auth2);
+
         String token = req.getHeader("Authorization");
         if(jsonObject1.get(s) != null){
             if((Boolean)jsonObject1.get(s)){
@@ -89,7 +87,6 @@ public class Filter implements javax.servlet.Filter {
                 if(loginBean.getRole() != "200" && loginBean.getRole() != "201"){
                     return;
                 }
-                System.out.println("普通用户检验通过");
             }
         }else if(jsonObject2.get(s)!=null) {
             if((Boolean) jsonObject2.get(s)){
@@ -99,12 +96,9 @@ public class Filter implements javax.servlet.Filter {
                 }
             }
         }
-        System.out.println("通过");
         //放行
         filterChain.doFilter(servletRequest,servletResponse);
-
     }
-
     @Override
     public void destroy() {
 

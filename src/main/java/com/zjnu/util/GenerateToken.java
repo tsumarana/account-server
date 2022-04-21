@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.UUID;
 
 public class GenerateToken {
+
     private long time = 1000*60*60*24;
     private String signature = "lixh";
     public String generate(String id,String userid, String username,String role){
@@ -30,19 +31,23 @@ public class GenerateToken {
         System.out.println(jwtToken);
         return jwtToken;
     }
+    //校验token
     public LoginBean verify(String token){
         LoginBean loginBean  = new LoginBean();
         JwtParser jwtParser = Jwts.parser();
         if(token == null || token.equals("null")) {
             loginBean.setRole("204");
-            System.out.println("token 为NULL");
         }else {
             try {
                 Jws<Claims> claimsJws = jwtParser.setSigningKey(signature).parseClaimsJws(token);
                 Claims body = claimsJws.getBody();
                 String username = String.valueOf(body.get("username"));
                 String _id = (String) body.get("userid");
-                System.out.println(username+"----"+_id);
+                String role = (String) body.get("role");
+                if(role.equals("1")){
+                    role = "201";
+                }
+                role = "200";
                 int id = Integer.parseInt(_id);
                 long time = body.getExpiration().getTime();
                 long nowTime = new Date().getTime();
@@ -50,6 +55,7 @@ public class GenerateToken {
                     if (username != null) {
                         loginBean.setUsername(username);
                         loginBean.setId(id);
+                        loginBean.setRole(role);
                     }else{
                         System.out.println("token过期");
                     }

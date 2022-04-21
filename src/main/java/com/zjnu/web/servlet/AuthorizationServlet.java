@@ -19,7 +19,6 @@ public class AuthorizationServlet {
         String s = req.getReader().readLine();
         User user = JSON.parseObject(s, User.class);
         String response = "username="+user.getUsername()+"\npassword="+user.getPassword();
-        System.out.println(response);
         resp.setContentType("text/json;charset=utf-8");
             resp.getWriter().write(response);
     }
