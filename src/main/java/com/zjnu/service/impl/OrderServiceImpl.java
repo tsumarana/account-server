@@ -1,10 +1,14 @@
 package com.zjnu.service.impl;
 
 import com.zjnu.mapper.OrderMapper;
+import com.zjnu.pojo.Chart;
 import com.zjnu.pojo.Order;
 import com.zjnu.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -40,6 +44,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void confirm(Order order) {
         mapper.confirm(order);
+    }
+
+    @Override
+    public List<Chart> getChart() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        String time = sdf.format(new Date()) + "%";
+        String time = sdf.format(new Date());
+        return mapper.getChart(time);
     }
 
 

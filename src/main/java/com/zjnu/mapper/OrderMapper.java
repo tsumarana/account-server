@@ -1,5 +1,6 @@
 package com.zjnu.mapper;
 
+import com.zjnu.pojo.Chart;
 import com.zjnu.pojo.Order;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -29,4 +30,10 @@ public interface OrderMapper {
     @ResultMap("orderResultMap")
     @Update("update tb_order set status='finish' , buyer = #{buyer} where brand_id = #{brandId}")
     void confirm(Order order);
+    @ResultMap("orderResultMap")
+    @Update("update tb_order set status='true' , buyer = #{buyer} where brand_id = #{brandId}")
+    void cancel(Order order);
+//    select count(*),substr(time,1,10)  from tb_order where  time like '2022-04%' group by substr(time,1,10)
+    @Select("select count(*) as count,substr(time,1,10) as data from tb_border where time < #{time} and status ='finish' group by substr(time,1,10)")
+    List<Chart> getChart(String time);
 }

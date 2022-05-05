@@ -36,6 +36,7 @@ public class Filter implements javax.servlet.Filter {
     //检查token
     public LoginBean checkToken(String token){
         LoginBean loginBean = generateToken.verify(token);
+        System.out.println(loginBean);
         try{
             int id = loginBean.getId();
             if(id != 0 ){
@@ -58,14 +59,6 @@ public class Filter implements javax.servlet.Filter {
         String s = req.getRequestURI();
         String auth2="{'/user/selectUserByPage':true,'user/logoffUser':true," +
                 "'user/freezeUser':true,}";
-        //过滤连接websoket的服务的连接
-//        if(s.equals("/websocket")){
-//            String token = req.getParameter("token");
-//            LoginBean loginBean= checkToken(token);
-//            if(loginBean.getRole() != "200" && loginBean.getRole() != "201"){
-//                return;
-//            }
-//        }
         if(s.equals("/goods/selectByPageAndCondition")){
             String id = String.valueOf(req.getParameter("id"));
             if(id!=null && id.equals("1")){

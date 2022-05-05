@@ -56,7 +56,7 @@ public class MessageServlet {
         }
         String format = sdf.format(new Date());
 
-        String realPath = "C:\\Users\\me\\Videos"+format;
+        String realPath = "D:\\video"+format;
 
         File folder = new File(realPath);
         if(!folder.exists()){

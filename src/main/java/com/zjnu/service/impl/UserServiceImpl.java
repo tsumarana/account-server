@@ -1,15 +1,18 @@
 package com.zjnu.service.impl;
 
 import com.zjnu.mapper.UserMapper;
+import com.zjnu.pojo.Friend;
 import com.zjnu.pojo.LoginBean;
 import com.zjnu.pojo.PageBean;
 import com.zjnu.pojo.User;
+import com.zjnu.service.FriendService;
 import com.zjnu.service.UserService;
 import com.zjnu.util.GenerateToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import org.apache.commons.codec.digest.DigestUtils;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -21,6 +24,8 @@ public class UserServiceImpl implements UserService {
     private UserMapper mapper;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private FriendService friendService;
     private GenerateToken generateToken = new GenerateToken();
     private String checkCode(User user,String id) {
         String checkCode = user.getCheck();
@@ -41,6 +46,9 @@ public class UserServiceImpl implements UserService {
             return loginBean;
         };
         loginBean.setRole("1013");
+        String password = user.getPassword();
+        password = DigestUtils.md5Hex(password).trim();
+        user.setPassword(password.trim());
         User user1 = mapper.selectUser(user);
         if(user1 != null ) {
             //生token
@@ -50,10 +58,10 @@ public class UserServiceImpl implements UserService {
             key += user1.getId();
             stringRedisTemplate.opsForValue().set(key,token,30, TimeUnit.MINUTES);
             //写数据
+            loginBean.setRole("1012");
             if(user1.getVip().trim().equals("1")) {
                 loginBean.setRole("1011");
             }
-            loginBean.setRole("1012");
             loginBean.setUsername(user1.getUsername());
             loginBean.setId(user1.getId());
             loginBean.setToken(token);
@@ -75,7 +83,20 @@ public class UserServiceImpl implements UserService {
             return "checkError";
         };
         if(selectUserByUserInfo(user) == null){
+            String password = user.getPassword();
+            password = DigestUtils.md5Hex(password);
+            user.setPassword(password);
             mapper.insertUser(user);
+            Friend friend = new Friend();
+            friend.setUsername(user.getUsername());
+            friend.setImg("https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3313909130,2406410525&fm=15&gp=0.jpg");
+            friend.setFriendname("admin");
+            friend.setSuccess("0");
+            friend.setFail("0");
+            friendService.addFriend(friend);
+            friend.setFriendname(user.getUsername());
+            friend.setUsername("admin");
+            friendService.addFriend(friend);
             return "success";
         }
         return "fail";

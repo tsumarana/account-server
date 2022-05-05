@@ -1,5 +1,6 @@
 package com.zjnu.service;
 
+import com.zjnu.pojo.Chart;
 import com.zjnu.pojo.Order;
 
 import java.util.List;
@@ -11,4 +12,5 @@ public interface OrderService {
     void deleteOrderById(int id);
     void addOrder(Order order);
     void confirm(Order order);
+    List<Chart> getChart();
 }

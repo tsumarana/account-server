@@ -1,5 +1,6 @@
 package com.zjnu.service.impl;
 
+import com.zjnu.mapper.OrderMapper;
 import com.zjnu.mapper.bOrderMapper;
 import com.zjnu.pojo.Order;
 import com.zjnu.service.BOrderService;
@@ -12,6 +13,8 @@ import java.util.List;
 public class BOrderServiceImpl implements BOrderService {
     @Autowired
     bOrderMapper mapper;
+    @Autowired
+    OrderMapper orderMapper;
     @Override
     public void addOrder(Order order) {
         mapper.addOrder(order);
@@ -51,7 +54,6 @@ public class BOrderServiceImpl implements BOrderService {
     @Override
     public void cancel(Order order) {
         mapper.cancel(order);
+        orderMapper.cancel(order);
     }
-
-
 }

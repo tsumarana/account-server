@@ -30,7 +30,6 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public void addFriend(Friend friend) {
         mapper.addFriend(friend);
-
     }
 
     @Override

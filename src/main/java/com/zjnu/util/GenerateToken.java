@@ -44,10 +44,12 @@ public class GenerateToken {
                 String username = String.valueOf(body.get("username"));
                 String _id = (String) body.get("userid");
                 String role = (String) body.get("role");
+
                 if(role.equals("1")){
                     role = "201";
+                }else{
+                    role = "200";
                 }
-                role = "200";
                 int id = Integer.parseInt(_id);
                 long time = body.getExpiration().getTime();
                 long nowTime = new Date().getTime();
